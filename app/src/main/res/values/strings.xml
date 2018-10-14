@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Giphy Search</string>
+    <string name="search_hint">Search for gifs</string>
+    <string name="gif_image">Gif image</string>
+    <string name="share_txt">Share</string>
+    <string name="your_last_search_msg">Your last search was for </string>
+</resources>

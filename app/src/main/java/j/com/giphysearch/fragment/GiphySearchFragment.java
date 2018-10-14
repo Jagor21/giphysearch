@@ -1,0 +1,164 @@
+package j.com.giphysearch.fragment;
+
+import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import j.com.giphysearch.R;
+import j.com.giphysearch.ui.GifAdapter;
+import j.com.giphysearch.utils.AppNetworkStatus;
+import j.com.giphysearch.viewModel.GifSearchViewModel;
+
+public class GiphySearchFragment extends Fragment {
+
+    @BindView(R.id.rv)
+    RecyclerView recyclerView;
+
+    @BindView(R.id.last_search_query)
+    TextView lastSearchQuery;
+
+    @BindView(R.id.your_last_search_msg)
+    TextView yourLastSearchMsg;
+
+    @BindView(R.id.search_et)
+    EditText searchEt;
+
+    @OnClick(R.id.search_btn)
+    void onClickHandler() {
+        String searchQuery = searchEt.getText().toString();
+        if (searchQuery.equals("")) {
+            Toast.makeText(mContext, "Please enter a search keyword!", Toast.LENGTH_SHORT).show();
+        } else {
+            searchForGifs(searchQuery);
+        }
+    }
+
+    private GifAdapter adapter;
+    private GifSearchViewModel viewModel;
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
+    private static Context mContext;
+
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        configureViewModel();
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_giphy_search, container, false);
+        ButterKnife.bind(this, view);
+
+        /*
+         * Getting LAST_SEARCH_QUERY
+         * from SharedPreferences for updateUIOffline()
+         */
+        sharedPreferences = getContext().getSharedPreferences("LAST_SEARCH_QUERY", Context.MODE_PRIVATE);
+        updateUIOffline();
+        configureRecyclerView();
+        return view;
+    }
+
+    private void configureRecyclerView() {
+        recyclerView.setHasFixedSize(true);
+        adapter = new GifAdapter(getContext());
+        recyclerView.setAdapter(adapter);
+        LinearLayoutManager manager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(manager);
+        DividerItemDecoration itemDecoration = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
+        recyclerView.addItemDecoration(itemDecoration);
+    }
+
+    //Handling Network connection state
+    private void updateUIOffline() {
+        mContext = getContext();
+        if (!isOnlineCheck()) {
+            String lastSearchQueryLocal = sharedPreferences.getString("SEARCH_QUERY", "");
+            yourLastSearchMsg.setVisibility(View.VISIBLE);
+            lastSearchQuery.setVisibility(View.VISIBLE);
+            lastSearchQuery.setText(lastSearchQueryLocal);
+        } else {
+            yourLastSearchMsg.setVisibility(View.GONE);
+            lastSearchQuery.setVisibility(View.GONE);
+        }
+    }
+
+    private boolean isOnlineCheck() {
+        AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
+        boolean isOnline = AppNetworkStatus.getInstance(appCompatActivity).isOnline();
+        if (appCompatActivity != null) {
+            if (!isOnline) {
+                Toast.makeText(appCompatActivity, "Network error!\nPlease check your connection!", Toast.LENGTH_SHORT).show();
+            }
+        }
+        return isOnline;
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        isOnlineCheck();
+    }
+
+    private void removeKeyboard() {
+        final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(searchEt.getWindowToken(), 0);
+    }
+
+    private void searchForGifs(String search) {
+        if (isOnlineCheck()) {
+            yourLastSearchMsg.setVisibility(View.GONE);
+            lastSearchQuery.setVisibility(View.GONE);
+            viewModel.getGifsBySearch(search);
+            removeKeyboard();
+            editor = sharedPreferences.edit();
+
+            editor.putString("SEARCH_QUERY", search);
+            editor.apply();
+        } else {
+            updateUIOffline();
+        }
+        removeKeyboard();
+    }
+
+    /*
+     * Creating viewModel,
+     * adding observer,
+     * and managing UI
+     */
+    private void configureViewModel() {
+        viewModel = ViewModelProviders.of(this).get(GifSearchViewModel.class);
+        viewModel.getmGifsSearch().observe(this, mGifsSearch -> {
+            if (adapter == null) {
+                adapter = new GifAdapter(mContext);
+                adapter.setData(mGifsSearch);
+                recyclerView.setAdapter(adapter);
+                recyclerView.scrollToPosition(0);
+            } else {
+                adapter.setData(mGifsSearch);
+                recyclerView.scrollToPosition(0);
+            }
+        });
+    }
+}
