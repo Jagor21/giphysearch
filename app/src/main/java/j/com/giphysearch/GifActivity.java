@@ -84,15 +84,6 @@ public class GifActivity extends AppCompatActivity {
 
     private void configuringGestureDetector() {
         mGestureDetector = new GestureDetector(this, new CustomGestureListener(mParent) {
-            @Override
-            public boolean onSwipeRight() {
-                return false;
-            }
-
-            @Override
-            public boolean onSwipeLeft() {
-                return false;
-            }
 
             @Override
             public boolean onSwipeUp() {

@@ -14,14 +14,7 @@ public abstract class CustomGestureListener extends GestureDetector.SimpleOnGest
 
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-//
-        if (e1.getX() < e2.getX()) {
-            return onSwipeRight();
-        }
 
-        if (e1.getX() > e2.getX()) {
-            return onSwipeLeft();
-        }
 
         if (e1.getY() > e2.getY()){
             return onSwipeUp();
@@ -34,9 +27,6 @@ public abstract class CustomGestureListener extends GestureDetector.SimpleOnGest
         return onTouch();
     }
 
-
-    public abstract boolean onSwipeRight();
-    public abstract boolean onSwipeLeft();
     public abstract boolean onSwipeUp();
     public abstract boolean onSwipeDown();
     public abstract boolean onTouch();
