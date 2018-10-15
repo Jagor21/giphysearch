@@ -69,9 +69,6 @@ public class AppRepository {
                 if (response.isSuccessful()) {
                     //Setting the value from the response
                     mutableLiveData.setValue(response.body().getData());
-                    executor.execute(() -> {
-                        mGifDAO.writeGifsToDB(response.body().getData());
-                    });
                 }
             }
 
