@@ -62,11 +62,6 @@ public class GifAdapter extends RecyclerView.Adapter<GifAdapter.GifViewHolder> {
             } else {
                 viewHolder.title.setText(gifTitle);
             }
-//            int height = (Integer.parseInt(gif.getImages().getFixed_height().getHeight() == null ?
-//                    "0" : gif.getImages().getFixed_height().getHeight()));
-//            if (height > 0) {
-//                viewHolder.imageView.getLayoutParams().height = height;
-//            }
             viewHolder.progressBar.setVisibility(View.VISIBLE);
 
             //Loading and setting gif to imageView

@@ -67,8 +67,6 @@ public class MainActivity extends AppCompatActivity {
         startService(new Intent(this, MusicService.class));
     }
 
-
-
     @Override
     protected void onStop() {
         super.onStop();

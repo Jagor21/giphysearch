@@ -13,8 +13,6 @@ public class SingleGifViewModel extends AndroidViewModel {
 
     private LiveData<Gif> mGif;
     private AppRepository repository;
-    private String mID;
-
 
     public SingleGifViewModel(@NonNull Application application) {
         super(application);

@@ -11,7 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -83,25 +82,6 @@ public class GiphySearchFragment extends Fragment {
             return false;
         });
         setupListenersToHideKeyboard(view.findViewById(R.id.search_parent));
-        recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
-            @Override
-            public boolean onInterceptTouchEvent(@NonNull RecyclerView recyclerView, @NonNull MotionEvent motionEvent) {
-                View view1 = recyclerView.findChildViewUnder(motionEvent.getX(), motionEvent.getY());
-                int position = recyclerView.getChildLayoutPosition(view1);
-                Log.i("RV_TAG", "onInterceptTouchEvent: " + position);
-                return false;
-            }
-
-            @Override
-            public void onTouchEvent(@NonNull RecyclerView recyclerView, @NonNull MotionEvent motionEvent) {
-
-            }
-
-            @Override
-            public void onRequestDisallowInterceptTouchEvent(boolean b) {
-
-            }
-        });
         return view;
     }
 
@@ -113,7 +93,6 @@ public class GiphySearchFragment extends Fragment {
         recyclerView.setLayoutManager(manager);
         DividerItemDecoration itemDecoration = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
         recyclerView.addItemDecoration(itemDecoration);
-
     }
 
     //Handling Network connection state
@@ -176,12 +155,12 @@ public class GiphySearchFragment extends Fragment {
     private void configureViewModel() {
         viewModel = ViewModelProviders.of(this).get(GifSearchViewModel.class);
         viewModel.getmGifsSearch().observe(this, mGifsSearch -> {
-            if  (adapter == null) {
+            if (adapter == null) {
                 adapter = new GifAdapter(mContext);
                 adapter.setData(mGifsSearch);
                 recyclerView.setAdapter(adapter);
                 recyclerView.scrollToPosition(0);
-            }else {
+            } else {
                 adapter.setData(mGifsSearch);
             }
         });
