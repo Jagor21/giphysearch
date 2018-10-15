@@ -11,9 +11,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -21,7 +24,6 @@ import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import j.com.giphysearch.R;
 import j.com.giphysearch.ui.GifAdapter;
 import j.com.giphysearch.utils.AppNetworkStatus;
@@ -41,21 +43,12 @@ public class GiphySearchFragment extends Fragment {
     @BindView(R.id.search_et)
     EditText searchEt;
 
-    @OnClick(R.id.search_btn)
-    void onClickHandler() {
-        String searchQuery = searchEt.getText().toString();
-        if (searchQuery.equals("")) {
-            Toast.makeText(mContext, "Please enter a search keyword!", Toast.LENGTH_SHORT).show();
-        } else {
-            searchForGifs(searchQuery);
-        }
-    }
-
     private GifAdapter adapter;
     private GifSearchViewModel viewModel;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
     private static Context mContext;
+    private String searchQuery;
 
 
     @Override
@@ -77,6 +70,38 @@ public class GiphySearchFragment extends Fragment {
         sharedPreferences = getContext().getSharedPreferences("LAST_SEARCH_QUERY", Context.MODE_PRIVATE);
         updateUIOffline();
         configureRecyclerView();
+        searchEt.setOnEditorActionListener((TextView.OnEditorActionListener) (v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                searchQuery = searchEt.getText().toString();
+                if (searchQuery.equals("")) {
+                    Toast.makeText(mContext, "Please enter a search keyword!", Toast.LENGTH_SHORT).show();
+                } else {
+                    searchForGifs(searchQuery);
+                }
+                return true;
+            }
+            return false;
+        });
+        setupListenersToHideKeyboard(view.findViewById(R.id.search_parent));
+        recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+            @Override
+            public boolean onInterceptTouchEvent(@NonNull RecyclerView recyclerView, @NonNull MotionEvent motionEvent) {
+                View view1 = recyclerView.findChildViewUnder(motionEvent.getX(), motionEvent.getY());
+                int position = recyclerView.getChildLayoutPosition(view1);
+                Log.i("RV_TAG", "onInterceptTouchEvent: " + position);
+                return false;
+            }
+
+            @Override
+            public void onTouchEvent(@NonNull RecyclerView recyclerView, @NonNull MotionEvent motionEvent) {
+
+            }
+
+            @Override
+            public void onRequestDisallowInterceptTouchEvent(boolean b) {
+
+            }
+        });
         return view;
     }
 
@@ -88,6 +113,7 @@ public class GiphySearchFragment extends Fragment {
         recyclerView.setLayoutManager(manager);
         DividerItemDecoration itemDecoration = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
         recyclerView.addItemDecoration(itemDecoration);
+
     }
 
     //Handling Network connection state
@@ -121,7 +147,7 @@ public class GiphySearchFragment extends Fragment {
         isOnlineCheck();
     }
 
-    private void removeKeyboard() {
+    private void hideKeyboard() {
         final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(searchEt.getWindowToken(), 0);
     }
@@ -131,7 +157,7 @@ public class GiphySearchFragment extends Fragment {
             yourLastSearchMsg.setVisibility(View.GONE);
             lastSearchQuery.setVisibility(View.GONE);
             viewModel.getGifsBySearch(search);
-            removeKeyboard();
+            hideKeyboard();
             editor = sharedPreferences.edit();
 
             editor.putString("SEARCH_QUERY", search);
@@ -139,7 +165,7 @@ public class GiphySearchFragment extends Fragment {
         } else {
             updateUIOffline();
         }
-        removeKeyboard();
+        hideKeyboard();
     }
 
     /*
@@ -150,15 +176,35 @@ public class GiphySearchFragment extends Fragment {
     private void configureViewModel() {
         viewModel = ViewModelProviders.of(this).get(GifSearchViewModel.class);
         viewModel.getmGifsSearch().observe(this, mGifsSearch -> {
-            if (adapter == null) {
+            if  (adapter == null) {
                 adapter = new GifAdapter(mContext);
                 adapter.setData(mGifsSearch);
                 recyclerView.setAdapter(adapter);
                 recyclerView.scrollToPosition(0);
-            } else {
+            }else {
                 adapter.setData(mGifsSearch);
-                recyclerView.scrollToPosition(0);
             }
         });
+    }
+
+    public void setupListenersToHideKeyboard(View view) {
+
+        // Set up touch listener for non-text box views to hide keyboard.
+        if (!(view instanceof EditText)) {
+            view.setOnTouchListener(new View.OnTouchListener() {
+                public boolean onTouch(View v, MotionEvent event) {
+                    hideKeyboard();
+                    return false;
+                }
+            });
+        }
+
+        //If a layout container, iterate over children and seed recursion.
+        if (view instanceof ViewGroup) {
+            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+                View innerView = ((ViewGroup) view).getChildAt(i);
+                setupListenersToHideKeyboard(innerView);
+            }
+        }
     }
 }

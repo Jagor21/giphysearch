@@ -3,7 +3,6 @@ package j.com.giphysearch;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.media.MediaPlayer;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -31,8 +30,6 @@ public class MainActivity extends AppCompatActivity {
     ViewPager viewPager;
 
     private PagerAdapter pagerAdapter;
-    private MediaPlayer mediaPlayer;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         startService(new Intent(this, MusicService.class));
     }
+
+
 
     @Override
     protected void onStop() {

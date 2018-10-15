@@ -29,4 +29,8 @@ public class GifTrendingViewModel extends AndroidViewModel {
         LiveData<List<Gif>> newTrendingGifs = repository.getTrendingGifs();
        return newTrendingGifs;
     }
+
+    public void writeGif(Gif gif){
+        repository.writeGif(gif);
+    }
 }

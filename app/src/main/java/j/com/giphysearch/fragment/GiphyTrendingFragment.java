@@ -1,6 +1,7 @@
 package j.com.giphysearch.fragment;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,16 +15,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import j.com.giphysearch.R;
+import j.com.giphysearch.entity.Gif;
 import j.com.giphysearch.ui.GifAdapter;
 import j.com.giphysearch.utils.AppNetworkStatus;
 import j.com.giphysearch.viewModel.GifTrendingViewModel;
 
-public class GiphyTrendingFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class GiphyTrendingFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, GifAdapter.ClickListener {
 
     public static final String TRENDING_FRAGMENT = "GiphyTrendingFragment";
 
@@ -63,6 +66,7 @@ public class GiphyTrendingFragment extends Fragment implements SwipeRefreshLayou
         viewModel.getTrendingGifs().observe(this, mGifsTrending -> {
             if (adapter == null) {
                 adapter = new GifAdapter(getContext());
+                adapter.setOnClickListener(this);
                 adapter.setData(mGifsTrending);
                 recyclerView.setAdapter(adapter);
                 recyclerView.scrollToPosition(0);
@@ -77,7 +81,9 @@ public class GiphyTrendingFragment extends Fragment implements SwipeRefreshLayou
     private void configureRecyclerView() {
         recyclerView.setHasFixedSize(true);
         adapter = new GifAdapter(getContext());
+        adapter.setOnClickListener(this);
         recyclerView.setAdapter(adapter);
+
         LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(manager);
         DividerItemDecoration itemDecoration = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
@@ -90,6 +96,7 @@ public class GiphyTrendingFragment extends Fragment implements SwipeRefreshLayou
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
             isOnlineCheck();
+            hideKeyboard(recyclerView);
         }
     }
 
@@ -110,6 +117,16 @@ public class GiphyTrendingFragment extends Fragment implements SwipeRefreshLayou
         if (isOnlineCheck()) {
             viewModel.getTrendingGifs();
         }
+    }
+
+    private void hideKeyboard(View view) {
+        final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    @Override
+    public void onGifImageClick(Gif gif) {
+        viewModel.writeGif(gif);
     }
 }
 

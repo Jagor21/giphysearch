@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,15 +30,19 @@ import j.com.giphysearch.R;
 import j.com.giphysearch.entity.Gif;
 import j.com.giphysearch.utils.GifHelper;
 
-public class GifAdapter extends RecyclerView.Adapter<GifAdapter.GifViewHolder> implements View.OnClickListener {
+public class GifAdapter extends RecyclerView.Adapter<GifAdapter.GifViewHolder> {
 
     private List<Gif> gifs;
     private Context context;
     private GifHelper gifHelper;
-    private Gif gif;
+    private ClickListener listener;
 
     public GifAdapter(Context context) {
         this.context = context;
+    }
+
+    public void setOnClickListener(ClickListener listener) {
+        this.listener = listener;
     }
 
     @NonNull
@@ -50,9 +55,18 @@ public class GifAdapter extends RecyclerView.Adapter<GifAdapter.GifViewHolder> i
     @Override
     public void onBindViewHolder(@NonNull GifAdapter.GifViewHolder viewHolder, int i) {
         if (gifs != null) {
-            gif = gifs.get(i);
-            String gifTitle = gif.getTitle().equals("") ? "No title" : gif.getTitle();
-            viewHolder.title.setText(gifTitle);
+            Gif gif = gifs.get(i);
+            String gifTitle = gif.getTitle();
+            if (gifTitle.equals("")) {
+                viewHolder.title.setVisibility(View.INVISIBLE);
+            } else {
+                viewHolder.title.setText(gifTitle);
+            }
+//            int height = (Integer.parseInt(gif.getImages().getFixed_height().getHeight() == null ?
+//                    "0" : gif.getImages().getFixed_height().getHeight()));
+//            if (height > 0) {
+//                viewHolder.imageView.getLayoutParams().height = height;
+//            }
             viewHolder.progressBar.setVisibility(View.VISIBLE);
 
             //Loading and setting gif to imageView
@@ -70,11 +84,32 @@ public class GifAdapter extends RecyclerView.Adapter<GifAdapter.GifViewHolder> i
                 }
             }).into(viewHolder.imageView);
 
-            //Setting OnClickListeners for buttons
-            viewHolder.saveBtn.setOnClickListener(this);
-            viewHolder.saveBtn.setOnClickListener(this);
-            viewHolder.shareBtn.setOnClickListener(this);
-            viewHolder.imageView.setOnClickListener(this);
+            //Setting OnClickListeners for buttons and imageView
+            viewHolder.saveBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    gifHelper = new GifHelper(context, gif);
+                    gifHelper.startSavingGif(false);
+                }
+            });
+            viewHolder.shareBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    gifHelper = new GifHelper(context, gif);
+                    gifHelper.startSavingGif(true);
+                }
+            });
+            viewHolder.imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        listener.onGifImageClick(gif);
+                    }
+                    Intent intent = new Intent(context, GifActivity.class);
+                    intent.putExtra("gif_id", gif.getId());
+                    context.startActivity(intent);
+                }
+            });
         }
     }
 
@@ -90,32 +125,14 @@ public class GifAdapter extends RecyclerView.Adapter<GifAdapter.GifViewHolder> i
     //This method is used for setting new data from LiveData
     public void setData(List<Gif> gifs) {
         this.gifs = gifs;
-        notifyDataSetChanged();
+
+        this.notifyDataSetChanged();
     }
 
     public List<Gif> getGifs() {
         return gifs;
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.save_btn:
-                gifHelper = new GifHelper(context, gif);
-                gifHelper.startSavingGif(false);
-                break;
-            case R.id.share_btn:
-                gifHelper = new GifHelper(context, gif);
-                gifHelper.startSavingGif(true);
-                break;
-            case R.id.gif_image:
-                Intent intent = new Intent(context, GifActivity.class);
-                intent.putExtra("gif_id", gif.getId());
-                intent.putExtra("gif_title", gif.getTitle());
-                context.startActivity(intent);
-                break;
-        }
-    }
 
     //ViewHolder class
     class GifViewHolder extends RecyclerView.ViewHolder {
@@ -139,5 +156,9 @@ public class GifAdapter extends RecyclerView.Adapter<GifAdapter.GifViewHolder> i
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
+    }
+
+    public interface ClickListener {
+        void onGifImageClick(Gif gif);
     }
 }

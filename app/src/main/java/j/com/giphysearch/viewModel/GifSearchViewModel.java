@@ -3,6 +3,7 @@ package j.com.giphysearch.viewModel;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
 import java.util.List;
@@ -28,6 +29,5 @@ public class GifSearchViewModel extends AndroidViewModel {
 
     public void getGifsBySearch(String s) {
         repository.getGifsBySearch(s);
-
     }
 }

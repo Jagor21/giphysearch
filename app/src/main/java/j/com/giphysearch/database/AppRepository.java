@@ -26,6 +26,7 @@ public class AppRepository {
 
     //MutableLiveData for GiphyTrendingViewModel
     MutableLiveData<List<Gif>> mutableLiveData = new MutableLiveData<>();
+    MutableLiveData<List<Gif>> gifMutableLiveData = new MutableLiveData<>();
 
 
     public AppRepository(Application application) {
@@ -68,6 +69,9 @@ public class AppRepository {
                 if (response.isSuccessful()) {
                     //Setting the value from the response
                     mutableLiveData.setValue(response.body().getData());
+                    executor.execute(() -> {
+                        mGifDAO.writeGifsToDB(response.body().getData());
+                    });
                 }
             }
 
@@ -80,6 +84,13 @@ public class AppRepository {
     }
 
     public LiveData<Gif> getGifById(String id) {
+        Gif gif = mGifDAO.getGifByID(id).getValue();
         return mGifDAO.getGifByID(id);
+    }
+
+    public void writeGif(Gif gif) {
+        executor.execute(() -> {
+            mGifDAO.writeGifToDB(gif);
+        });
     }
 }

@@ -9,6 +9,9 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
@@ -75,7 +78,7 @@ public class GifHelper {
         FileOutputStream os = null;
         String absPath = null;
         try {
-            File externalStorage = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+            File externalStorage = Environment.getExternalStorageDirectory();
             File giphySearchDirectory = new File(externalStorage, "Giphy Search");
             if (!giphySearchDirectory.exists()) {
                 boolean mkdir = giphySearchDirectory.mkdirs();
@@ -100,14 +103,15 @@ public class GifHelper {
                     contentValues.put(MediaStore.Images.Media.MIME_TYPE, "image/gif");
                     contentValues.put(MediaStore.Images.Media.DATE_ADDED, System.currentTimeMillis());
                     contentValues.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
-                    contentValues.put(MediaStore.Images.Media.DATE_TAKEN, file.getAbsolutePath());
+                    contentValues.put(MediaStore.Images.Media.DATA, file.getAbsolutePath());
                     context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+                    Toast.makeText(context, "Saved!", Toast.LENGTH_SHORT).show();
                     Log.i("MY_TAG", "saveGif: " + absPath);
                     return file;
                 }
             }
         } catch (Exception e) {
-            e.getMessage();
+            Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
         return file;
     }

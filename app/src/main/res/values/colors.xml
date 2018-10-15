@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorPrimary">#acd5de</color>
+    <color name="colorPrimaryDark">#71969e</color>
+    <color name="colorAccent">#dfdfdf</color>
     <color name="black">#000000</color>
+    <color name="activity_bck_clr">#8e9b9e</color>
+    <color name="card_bck_clr">#b7b7b7</color>
+    <color name="search_bck_clr">#738284</color>
 </resources>
