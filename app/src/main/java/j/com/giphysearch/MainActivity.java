@@ -55,8 +55,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void initViewPager() {
         pagerAdapter = new PagerAdapter(getSupportFragmentManager());
-        pagerAdapter.addFragment(new GiphySearchFragment(), "Search");
         pagerAdapter.addFragment(new GiphyTrendingFragment(), "Trending");
+        pagerAdapter.addFragment(new GiphySearchFragment(), "Search");
         viewPager.setAdapter(pagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
     }
