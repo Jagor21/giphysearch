@@ -105,8 +105,6 @@ public class GifHelper {
                     contentValues.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
                     contentValues.put(MediaStore.Images.Media.DATA, file.getAbsolutePath());
                     context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
-                    Toast.makeText(context, "Saved!", Toast.LENGTH_SHORT).show();
-                    Log.i("MY_TAG", "saveGif: " + absPath);
                     return file;
                 }
             }
@@ -149,6 +147,7 @@ public class GifHelper {
                 try {
                     gifAbsPAth = file.getAbsolutePath();
                     mFile = saveGif(context, getBytesFromFile(file), mGif.getTitle());
+                    Toast.makeText(context, "Saved!", Toast.LENGTH_SHORT).show();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

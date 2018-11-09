@@ -2,8 +2,10 @@ package j.com.giphysearch.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,7 +27,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import j.com.giphysearch.GifActivity;
 import j.com.giphysearch.R;
 import j.com.giphysearch.entity.Gif;
 import j.com.giphysearch.utils.GifHelper;
@@ -100,9 +101,6 @@ public class GifAdapter extends RecyclerView.Adapter<GifAdapter.GifViewHolder> {
                     if (listener != null) {
                         listener.onGifImageClick(gif);
                     }
-                    Intent intent = new Intent(context, GifActivity.class);
-                    intent.putExtra("gif_id", gif.getId());
-                    context.startActivity(intent);
                 }
             });
         }

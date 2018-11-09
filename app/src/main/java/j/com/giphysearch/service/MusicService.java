@@ -22,7 +22,7 @@ public class MusicService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        player = MediaPlayer.create(this, R.raw.virtual_insanity);
+        player = MediaPlayer.create(this, R.raw.jk);
         player.start();
         return START_STICKY;
     }

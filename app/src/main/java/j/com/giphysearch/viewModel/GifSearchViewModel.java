@@ -29,4 +29,9 @@ public class GifSearchViewModel extends AndroidViewModel {
     public void getGifsBySearch(String s) {
         repository.getGifsBySearch(s);
     }
+
+
+    public void writeGif(Gif gif){
+        repository.writeGif(gif);
+    }
 }

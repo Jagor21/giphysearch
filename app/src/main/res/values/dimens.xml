@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="cardViewMarginBottom">8dp</dimen>
+    <dimen name="cardViewPaddingLeft">2dp</dimen>
+    <dimen name="cardViewPaddingRight">2dp</dimen>
+    <dimen name="gifToolbarElevation">8dp</dimen>
+    <dimen name="standardMargin">8dp</dimen>
+    <dimen name="searchETPaddingLR">10dp</dimen>
+    <dimen name="searchETPaddingTB">5dp</dimen>
+    <dimen name="lastSearchQueryTxtSize">16sp</dimen>
+    <dimen name="GifItemTitleTxtSize">22sp</dimen>
+    <dimen name="search_et_border_radius">25dp</dimen>
+    <dimen name="buttonHeight">40dp</dimen>
+</resources>

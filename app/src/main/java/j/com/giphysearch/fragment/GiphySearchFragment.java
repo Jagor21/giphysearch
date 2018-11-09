@@ -24,11 +24,13 @@ import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import j.com.giphysearch.R;
+import j.com.giphysearch.entity.Gif;
+import j.com.giphysearch.ui.FragmentGifImageClickListener;
 import j.com.giphysearch.ui.GifAdapter;
 import j.com.giphysearch.utils.AppNetworkStatus;
 import j.com.giphysearch.viewModel.GifSearchViewModel;
 
-public class GiphySearchFragment extends Fragment {
+public class GiphySearchFragment extends Fragment implements GifAdapter.ClickListener {
 
     @BindView(R.id.rv)
     RecyclerView recyclerView;
@@ -48,7 +50,11 @@ public class GiphySearchFragment extends Fragment {
     private SharedPreferences.Editor editor;
     private static Context mContext;
     private String searchQuery;
+    private FragmentGifImageClickListener listener;
 
+    public void setOnFragmentGifImageClickListener(FragmentGifImageClickListener listener) {
+        this.listener = listener;
+    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -88,6 +94,7 @@ public class GiphySearchFragment extends Fragment {
     private void configureRecyclerView() {
         recyclerView.setHasFixedSize(true);
         adapter = new GifAdapter(getContext());
+        adapter.setOnClickListener(this);
         recyclerView.setAdapter(adapter);
         LinearLayoutManager manager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(manager);
@@ -185,5 +192,11 @@ public class GiphySearchFragment extends Fragment {
                 setupListenersToHideKeyboard(innerView);
             }
         }
+    }
+
+    @Override
+    public void onGifImageClick(Gif gif) {
+        viewModel.writeGif(gif);
+        listener.onFragmentGifImageClick(gif);
     }
 }

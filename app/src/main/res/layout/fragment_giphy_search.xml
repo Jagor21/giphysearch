@@ -2,9 +2,9 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/search_parent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/search_parent"
     tools:context=".MainActivity">
 
     <android.support.constraint.ConstraintLayout
@@ -16,59 +16,39 @@
 
         <EditText
             android:id="@+id/search_et"
+            style="@style/SearchET"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:hint="@string/search_hint"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:imeOptions="actionSearch"
-            android:inputType="text"
-            android:padding="5dp"
-            android:background="@drawable/rounded_corners_et"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 
     <TextView
         android:id="@+id/your_last_search_msg"
+        style="@style/yourLastSearchMsg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:text="@string/your_last_search_msg"
-        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/search_cl"
-        android:visibility="gone"/>
+        app:layout_constraintTop_toBottomOf="@+id/search_cl" />
 
     <TextView
         android:id="@+id/last_search_query"
+        style="@style/LastSearchQuery"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:text="gif"
-        android:textSize="16sp"
-        android:textColor="#000000"
-        android:textStyle="italic"
-        android:visibility="gone"
         app:layout_constraintStart_toEndOf="@+id/your_last_search_msg"
         app:layout_constraintTop_toBottomOf="@+id/search_cl" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv"
+        style="@style/GifRecyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/your_last_search_msg"/>
+        app:layout_constraintTop_toBottomOf="@+id/your_last_search_msg" />
 
 </android.support.constraint.ConstraintLayout>

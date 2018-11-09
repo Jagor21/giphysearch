@@ -3,11 +3,10 @@
 
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/GifCardView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardBackgroundColor="@color/card_bck_clr"
-    android:layout_marginBottom="8dp"
     app:cardCornerRadius="5dp">
 
     <android.support.constraint.ConstraintLayout
@@ -16,18 +15,11 @@
 
         <TextView
             android:id="@+id/gif_title"
+            style="@style/GifItemTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:textColor="#000000"
-            android:textSize="22sp"
-            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent" />
 
         <ProgressBar
             android:id="@+id/progress_bar"
@@ -43,27 +35,19 @@
 
         <ImageView
             android:id="@+id/gif_image"
+            style="@style/GifItemImage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:adjustViewBounds="true"
-            android:contentDescription="@string/gif_image"
             app:layout_constraintBottom_toTopOf="@+id/save_btn"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/gif_title"/>
+            app:layout_constraintTop_toBottomOf="@+id/gif_title" />
 
         <Button
             android:id="@+id/share_btn"
+            style="@style/ShareBtn"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:drawableLeft="@drawable/ic_share"
-            android:text="@string/share_txt"
-            android:textAllCaps="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -71,14 +55,8 @@
 
         <Button
             android:id="@+id/save_btn"
+            style="@style/SaveBtn"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:drawableLeft="@drawable/ic_save"
-            android:shadowColor="@color/colorPrimary"
-            android:text="Save"
-            android:textAllCaps="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/share_btn"
             app:layout_constraintTop_toTopOf="parent"

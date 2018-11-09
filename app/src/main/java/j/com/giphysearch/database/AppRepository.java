@@ -22,7 +22,7 @@ public class AppRepository {
     private GifDAO mGifDAO;
     private LiveData<List<Gif>> mGifs;
     private Executor executor;
-    private static final String apiKey = "Zz7XnA0RZzJJetQAQv1e2c7ErivA9F5u";
+    private static final String apiKey = "P0nEDDOhrwPIvVOJDx4vgJKbdEKPww3F";
 
     //MutableLiveData for GiphyTrendingViewModel
     MutableLiveData<List<Gif>> mutableLiveData = new MutableLiveData<>();
@@ -81,7 +81,6 @@ public class AppRepository {
     }
 
     public LiveData<Gif> getGifById(String id) {
-        Gif gif = mGifDAO.getGifByID(id).getValue();
         return mGifDAO.getGifByID(id);
     }
 

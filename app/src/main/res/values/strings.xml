@@ -4,4 +4,5 @@
     <string name="gif_image">Gif image</string>
     <string name="share_txt">Share</string>
     <string name="your_last_search_msg">Your last search was for </string>
+    <string name="save_txt">Save</string>
 </resources>

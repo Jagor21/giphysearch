@@ -22,6 +22,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import j.com.giphysearch.R;
 import j.com.giphysearch.entity.Gif;
+import j.com.giphysearch.ui.FragmentGifImageClickListener;
 import j.com.giphysearch.ui.GifAdapter;
 import j.com.giphysearch.utils.AppNetworkStatus;
 import j.com.giphysearch.viewModel.GifTrendingViewModel;
@@ -38,6 +39,11 @@ public class GiphyTrendingFragment extends Fragment implements SwipeRefreshLayou
 
     private GifAdapter adapter;
     private GifTrendingViewModel viewModel;
+    private FragmentGifImageClickListener fragmentListener;
+
+    public void setOnFragmentGifImageClickListener(FragmentGifImageClickListener listener) {
+        this.fragmentListener = listener;
+    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -129,6 +135,7 @@ public class GiphyTrendingFragment extends Fragment implements SwipeRefreshLayou
     @Override
     public void onGifImageClick(Gif gif) {
         viewModel.writeGif(gif);
+        fragmentListener.onFragmentGifImageClick(gif);
     }
 }
 
